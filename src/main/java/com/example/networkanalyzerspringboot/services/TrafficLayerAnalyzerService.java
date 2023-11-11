@@ -35,23 +35,6 @@ public class TrafficLayerAnalyzerService {
         if (!physical.isEmpty())
             return physical;
 
-        for (Packet packet : packets) {
-            EthernetPacket ethernetPacket = packet.get(EthernetPacket.class);
-            String sourceMacAddress = ethernetPacket.getHeader().getSrcAddr().toString();
-            String destinationMacAddress = ethernetPacket.getHeader().getDstAddr().toString();
-            EtherType ethernetType = ethernetPacket.getHeader().getType();
-            Ethernet ethernet = new Ethernet(
-                    new EthernetHeader(
-                            sourceMacAddress,
-                            destinationMacAddress,
-                            ethernetType.valueAsString()
-                    ),
-                    ethernetPacket.getPayload().getRawData()
-            );
-
-            physical.add(ethernet);
-
-        }
 
         return physical;
     }
