@@ -17,7 +17,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ethernet")
-@Validated
 public class EthernetAnalyzerController {
     private final StorageService storageService;
     private final EthernetService ethernetService;
@@ -167,9 +166,6 @@ public class EthernetAnalyzerController {
 
         return this.ethernetService.filterByEthernetType(ethernetType);
     }
-
-
-
 
 
 }
