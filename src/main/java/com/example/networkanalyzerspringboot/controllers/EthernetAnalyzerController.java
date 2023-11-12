@@ -1,42 +1,40 @@
 package com.example.networkanalyzerspringboot.controllers;
 
+import com.example.networkanalyzerspringboot.exceptions.traffic.analyzer.exceptions.EthernetPacketsNotFoundException;
 import com.example.networkanalyzerspringboot.exceptions.traffic.analyzer.exceptions.StorageFileNotFoundException;
 import com.example.networkanalyzerspringboot.models.Ethernet;
 import com.example.networkanalyzerspringboot.services.EthernetService;
-import com.example.networkanalyzerspringboot.services.PcapFileUploader;
 import com.example.networkanalyzerspringboot.services.StorageService;
-import com.example.networkanalyzerspringboot.utility.FolderConstants;
-import jakarta.servlet.http.HttpServlet;
+import com.example.networkanalyzerspringboot.utility.validators.MacValidation;
 import org.pcap4j.packet.Packet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/ethernet")
+@Validated
 public class EthernetAnalyzerController {
+    private final StorageService storageService;
+    private final EthernetService ethernetService;
 
-    private final HttpServlet httpServlet;
-    private StorageService storageService;
-    private EthernetService ethernetService;
 
     @Autowired
-    public EthernetAnalyzerController(StorageService storageService, HttpServlet httpServlet, EthernetService ethernetService) {
+    public EthernetAnalyzerController(StorageService storageService, EthernetService ethernetService) {
         this.storageService = storageService;
-        this.httpServlet = httpServlet;
         this.ethernetService = ethernetService;
     }
 
     @GetMapping("/")
-    public List<Ethernet> physicalLayer(@RequestParam String id) {
+    public List<Ethernet> findAll(@RequestParam String id) {
         String filename = String.format("%s", id);
         List<Packet> packets = new ArrayList<>();
 
-        if (id == null)
+        if (id == null || id.isEmpty())
             throw new RuntimeException("No pcap file provided");
 
         try {
@@ -51,4 +49,127 @@ public class EthernetAnalyzerController {
         }
         return this.ethernetService.getEthernetList();
     }
+
+    @GetMapping("/{source-mac}/source-mac")
+    public List<Ethernet> findBySourceMac(@PathVariable("source-mac") @MacValidation String sourceMac,  @RequestParam("filename") String filename) {
+
+        if (sourceMac == null || sourceMac.isEmpty())
+            throw new RuntimeException("No source mac provided");
+
+        if (filename == null || filename.isEmpty())
+            throw new RuntimeException("No pcap file provided");
+
+
+        try {
+            List<Packet> packets = this.storageService.loadPackets(filename);
+            this.ethernetService.setPackets(packets);
+
+            if (packets.isEmpty())
+                throw new StorageFileNotFoundException("No packets found");
+
+        } catch (StorageFileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        List<Ethernet> ethernets = this.ethernetService.getEthernetList();
+
+        if (ethernets.isEmpty())
+            throw new EthernetPacketsNotFoundException("No ethernet packets found");
+
+        return this.ethernetService.filterBySourceMac(sourceMac);
+    }
+
+    @GetMapping("/{destination-mac}/destination-mac")
+    public List<Ethernet> findByDestinationMac(@PathVariable("destination-mac") @MacValidation String destinationMac, @RequestParam("filename") String filename) {
+
+        if (destinationMac == null || destinationMac.isEmpty())
+            throw new RuntimeException("No destination mac provided");
+
+        if (filename == null || filename.isEmpty())
+            throw new RuntimeException("No pcap file provided");
+
+        try {
+            List<Packet> packets = this.storageService.loadPackets(filename);
+            this.ethernetService.setPackets(packets);
+
+            if (packets.isEmpty())
+                throw new StorageFileNotFoundException("No packets found");
+
+        } catch (StorageFileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<Ethernet> ethernets = this.ethernetService.getEthernetList();
+
+        if (ethernets.isEmpty())
+            throw new EthernetPacketsNotFoundException("No ethernet packets found");
+
+        return this.ethernetService.filterByDestinationMac(destinationMac);
+    }
+
+    @GetMapping("/{source-mac}/source-mac/{destination-mac}/destination-mac")
+    public List<Ethernet> findBySourceAndDestinationMac(@PathVariable("source-mac") @MacValidation String sourceMac, @PathVariable("destination-mac") @MacValidation String destinationMac, @RequestParam("filename") String filename) {
+
+        if (sourceMac == null || sourceMac.isEmpty())
+            throw new RuntimeException("No source mac provided");
+
+        if (destinationMac == null || destinationMac.isEmpty())
+            throw new RuntimeException("No destination mac provided");
+
+        if (filename == null || filename.isEmpty())
+            throw new RuntimeException("No pcap file provided");
+
+        try {
+            List<Packet> packets = this.storageService.loadPackets(filename);
+            this.ethernetService.setPackets(packets);
+
+            if (packets.isEmpty())
+                throw new StorageFileNotFoundException("No packets found");
+
+        } catch (StorageFileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<Ethernet> ethernets = this.ethernetService.getEthernetList();
+
+        if (ethernets.isEmpty())
+            throw new EthernetPacketsNotFoundException("No ethernet packets found");
+
+        return this.ethernetService.filterBySourceAndDestinationMac(sourceMac, destinationMac);
+    }
+
+
+    @GetMapping("/{ethernet-type}/ethernet-type")
+    public List<Ethernet> findByEthernetType(@PathVariable("ethernet-type") String ethernetType, @RequestParam("filename") String filename) {
+
+        if (ethernetType == null || ethernetType.isEmpty())
+            throw new RuntimeException("No ethernet type provided");
+
+        if (filename == null || filename.isEmpty())
+            throw new RuntimeException("No pcap file provided");
+
+        try {
+            List<Packet> packets = this.storageService.loadPackets(filename);
+            this.ethernetService.setPackets(packets);
+
+            if (packets.isEmpty())
+                throw new StorageFileNotFoundException("No packets found");
+
+        } catch (StorageFileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<Ethernet> ethernets = this.ethernetService.getEthernetList();
+
+        if (ethernets.isEmpty())
+            throw new EthernetPacketsNotFoundException("No ethernet packets found");
+
+        return this.ethernetService.filterByEthernetType(ethernetType);
+    }
+
+
+
+
+
 }

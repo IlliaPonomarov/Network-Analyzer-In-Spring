@@ -2,6 +2,7 @@ package com.example.networkanalyzerspringboot.mappers;
 
 import com.example.networkanalyzerspringboot.models.Ethernet;
 import com.example.networkanalyzerspringboot.models.EthernetHeader;
+import com.example.networkanalyzerspringboot.utility.EthernetType;
 import org.pcap4j.packet.EthernetPacket;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.namednumber.EtherType;
@@ -16,12 +17,16 @@ public class EthernetMapper {
             EthernetPacket ethernetPacket = packet.get(EthernetPacket.class);
             String sourceMacAddress = ethernetPacket.getHeader().getSrcAddr().toString();
             String destinationMacAddress = ethernetPacket.getHeader().getDstAddr().toString();
-            EtherType ethernetType = ethernetPacket.getHeader().getType();
+            String ethernetType = ethernetPacket.getHeader().getType().name();
+
+            int length = ethernetPacket.getHeader().length();
+
             Ethernet ethernet = new Ethernet(
                     new EthernetHeader(
                             sourceMacAddress,
                             destinationMacAddress,
-                            ethernetType.valueAsString()
+                            ethernetType,
+                            length
                     ),
                     ethernetPacket.getPayload().getRawData()
             );

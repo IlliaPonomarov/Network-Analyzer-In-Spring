@@ -1,7 +1,5 @@
 package com.example.networkanalyzerspringboot.models;
 
-import org.pcap4j.packet.namednumber.EtherType;
-
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,12 +9,14 @@ public class EthernetHeader {
     private String sourceMacAddress;
     private String destinationMacAddress;
     private String ethernetType;
+    private int length;
 
-    public EthernetHeader(String sourceMacAddress, String destinationMacAddress, String ethernetType) {
+    public EthernetHeader(String sourceMacAddress, String destinationMacAddress, String ethernetType, int length) {
         this.id = UUID.randomUUID();
         this.sourceMacAddress = sourceMacAddress;
         this.destinationMacAddress = destinationMacAddress;
         this.ethernetType = ethernetType;
+        this.length = length;
     }
 
     public UUID getId() {
@@ -33,6 +33,14 @@ public class EthernetHeader {
 
     public String getDestinationMacAddress() {
         return destinationMacAddress;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public void setLength(int length) {
+        this.length = length;
     }
 
     public void setDestinationMacAddress(String destinationMacAddress) {
@@ -52,12 +60,12 @@ public class EthernetHeader {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EthernetHeader that = (EthernetHeader) o;
-        return Objects.equals(id, that.id) && Objects.equals(sourceMacAddress, that.sourceMacAddress) && Objects.equals(destinationMacAddress, that.destinationMacAddress) && Objects.equals(ethernetType, that.ethernetType);
+        return length == that.length && Objects.equals(id, that.id) && Objects.equals(sourceMacAddress, that.sourceMacAddress) && Objects.equals(destinationMacAddress, that.destinationMacAddress) && Objects.equals(ethernetType, that.ethernetType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, sourceMacAddress, destinationMacAddress, ethernetType);
+        return Objects.hash(id, sourceMacAddress, destinationMacAddress, ethernetType, length);
     }
 
     @Override
@@ -66,7 +74,8 @@ public class EthernetHeader {
                 "id=" + id +
                 ", sourceMacAddress='" + sourceMacAddress + '\'' +
                 ", destinationMacAddress='" + destinationMacAddress + '\'' +
-                ", ethernetType=" + ethernetType +
+                ", ethernetType='" + ethernetType + '\'' +
+                ", length=" + length +
                 '}';
     }
 }
