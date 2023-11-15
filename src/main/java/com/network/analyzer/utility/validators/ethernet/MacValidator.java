@@ -1,4 +1,4 @@
-package com.network.analyzer.utility.validators;
+package com.network.analyzer.utility.validators.ethernet;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

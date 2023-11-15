@@ -5,7 +5,7 @@ import com.network.analyzer.storage.exceptions.StorageFileNotFoundException;
 import com.network.analyzer.layers.physical.models.Ethernet;
 import com.network.analyzer.layers.physical.services.EthernetService;
 import com.network.analyzer.storage.services.StorageService;
-import com.network.analyzer.utility.validators.MacValidation;
+import com.network.analyzer.utility.validators.ethernet.MacValidation;
 import org.pcap4j.packet.Packet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
