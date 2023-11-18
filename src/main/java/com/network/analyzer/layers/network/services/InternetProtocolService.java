@@ -1,5 +1,6 @@
 package com.network.analyzer.layers.network.services;
 
+import com.network.analyzer.layers.network.models.ARP;
 import com.network.analyzer.layers.network.models.ICMP;
 import com.network.analyzer.layers.network.models.InternetProtocolV4;
 import org.pcap4j.packet.Packet;
@@ -17,4 +18,6 @@ public interface InternetProtocolService {
 
     List<ICMP> findICMPv4sByIPVersion(String format);
     List<ICMP> findICMPv6sByIPVersion(String format);
+
+    List<ARP> findARPs();
 }
