@@ -5,7 +5,8 @@ import com.network.analyzer.layers.network.mappers.IPv6Mapper;
 import com.network.analyzer.layers.network.models.InternetProtocol;
 import com.network.analyzer.layers.network.models.InternetProtocolV4;
 import com.network.analyzer.layers.network.models.InternetProtocolV6;
-import com.network.analyzer.services.FilterService;
+import com.network.analyzer.services.FilterIPService;
+import com.network.analyzer.services.PacketService;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.IpV6Packet;
 import org.pcap4j.packet.Packet;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("filterIPServiceImpl")
-public class FilterIPServiceImpl implements FilterService {
+public class FilterIPServiceImpl implements FilterIPService, PacketService {
     private List<Packet> packets = new ArrayList<>();
     private List<InternetProtocolV4> internetProtocolV4List = new ArrayList<>();
     private List<InternetProtocolV6> internetProtocolV6List = new ArrayList<>();

@@ -1,11 +1,10 @@
 package com.network.analyzer.services;
 
-import com.network.analyzer.layers.network.models.InternetProtocol;
 import org.pcap4j.packet.Packet;
 
 import java.util.List;
 
-public interface FilterService {
+public interface FilterIPService {
 
     boolean collectPackets();
     List<?> filterBySource(String source, String version);

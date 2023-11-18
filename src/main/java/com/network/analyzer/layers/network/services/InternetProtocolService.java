@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface InternetProtocolService {
 
-    boolean collectInternetProtocols();
+    boolean collectPackets();
     long countOfInternetProtocols();
     List<InternetProtocolV4> findInternetProtocolsByIPVersion(String version);
     List<InternetProtocolV4> findInternetProtocolsByIPVersionAndIP(String version, String ip);

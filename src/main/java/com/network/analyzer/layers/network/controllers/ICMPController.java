@@ -3,6 +3,7 @@ package com.network.analyzer.layers.network.controllers;
 import com.network.analyzer.layers.network.exceptions.ICMPPacketsNotFoundException;
 import com.network.analyzer.layers.network.models.ICMP;
 import com.network.analyzer.layers.network.services.InternetProtocolService;
+import com.network.analyzer.services.FilterIPService;
 import com.network.analyzer.storage.exceptions.PacketListIsEmptyException;
 import com.network.analyzer.storage.exceptions.StorageFileNotFoundException;
 import com.network.analyzer.storage.services.StorageService;
@@ -24,7 +25,7 @@ public class ICMPController {
     private final InternetProtocolService ipService;
 
     @Autowired
-    public ICMPController(StorageService storageService, @Qualifier("internetProtocolService") InternetProtocolService ipService) {
+    public ICMPController(StorageService storageService, @Qualifier("internetProtocolServiceImpl") InternetProtocolService ipService) {
         this.storageService = storageService;
         this.ipService = ipService;
     }
@@ -52,4 +53,7 @@ public class ICMPController {
 
         return ipService.findICMPv6sByIPVersion(String.format(format));
     }
+
+
+
 }

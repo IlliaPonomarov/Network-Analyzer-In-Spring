@@ -1,14 +1,10 @@
 package com.network.analyzer.layers.network.controllers;
 
-import com.network.analyzer.layers.network.exceptions.ARPPacketsNotFoundException;
-import com.network.analyzer.layers.network.exceptions.ICMPPacketsNotFoundException;
 import com.network.analyzer.layers.network.exceptions.IPPacketsNotFoundException;
-import com.network.analyzer.layers.network.models.ARP;
-import com.network.analyzer.layers.network.models.ICMP;
 import com.network.analyzer.layers.network.models.InternetProtocol;
 import com.network.analyzer.layers.network.models.InternetProtocolV4;
 import com.network.analyzer.layers.network.services.InternetProtocolService;
-import com.network.analyzer.services.FilterService;
+import com.network.analyzer.services.FilterIPService;
 import com.network.analyzer.storage.exceptions.PacketListIsEmptyException;
 import com.network.analyzer.storage.exceptions.StorageFileNotFoundException;
 import com.network.analyzer.storage.services.StorageService;
@@ -19,7 +15,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -28,13 +23,13 @@ public class InternetProtocolController {
 
     private final StorageService storageService;
     private final InternetProtocolService ipService;
-    private final FilterService filterService;
+    private final FilterIPService filterIPService;
 
     @Autowired
-    public InternetProtocolController(StorageService storageService, @Qualifier("internetProtocolService") InternetProtocolService ipService, @Qualifier("filterIPServiceImpl") FilterService filterService) {
+    public InternetProtocolController(StorageService storageService, @Qualifier("internetProtocolServiceImpl") InternetProtocolService ipService, @Qualifier("filterIPServiceImpl") FilterIPService filterIPService) {
         this.storageService = storageService;
         this.ipService = ipService;
-        this.filterService = filterService;
+        this.filterIPService = filterIPService;
     }
 
     @GetMapping("/")
@@ -55,12 +50,12 @@ public class InternetProtocolController {
     public List<? extends InternetProtocol> findPacketsBySourceAndDestination(@PathVariable("sourceIp") String sourceIp, @PathVariable("destinationIp") String destinationIp, @VersionValidation @PathVariable("version") String version, @PathVariable("id") String id) {
         try {
             List<Packet> packets = storageService.loadPackets(id);
-            filterService.setPackets(packets);
+            filterIPService.setPackets(packets);
         } catch (StorageFileNotFoundException e) {
             throw new PacketListIsEmptyException("Packet list is empty");
         }
 
-        List<? extends InternetProtocol> internetProtocols = (List<? extends InternetProtocol>) filterService.filterBySourceAndDestination(sourceIp, destinationIp, String.format("IPv%s", version));
+        List<? extends InternetProtocol> internetProtocols = (List<? extends InternetProtocol>) filterIPService.filterBySourceAndDestination(sourceIp, destinationIp, String.format("IPv%s", version));
 
         if (internetProtocols.isEmpty())
             throw new IPPacketsNotFoundException(String.format("IP packets with source ip: %s and destination ip: %s not found", sourceIp, destinationIp));
@@ -74,12 +69,12 @@ public class InternetProtocolController {
     public List<InternetProtocolV4> findPacketsBySource(@PathVariable("sourceIp") String sourceIp, @VersionValidation @PathVariable("version") String version, @PathVariable("id") String id) {
         try {
             List<Packet> packets = storageService.loadPackets(id);
-            filterService.setPackets(packets);
+            filterIPService.setPackets(packets);
         } catch (StorageFileNotFoundException e) {
             throw new PacketListIsEmptyException("Packet list is empty");
         }
 
-        List<? extends InternetProtocol> internetProtocols = (List<? extends InternetProtocol>) filterService.filterBySource(sourceIp, String.format("IPv%s", version));
+        List<? extends InternetProtocol> internetProtocols = (List<? extends InternetProtocol>) filterIPService.filterBySource(sourceIp, String.format("IPv%s", version));
 
         if (internetProtocols.isEmpty())
             throw new IPPacketsNotFoundException(String.format("IP packets with source ip: %s not found", sourceIp));
@@ -92,12 +87,12 @@ public class InternetProtocolController {
     public List<InternetProtocolV4> findPacketsByDestination(@PathVariable("destinationIp") String destinationIp, @VersionValidation @PathVariable("version") String version, @PathVariable("id") String id) {
         try {
             List<Packet> packets = storageService.loadPackets(id);
-            filterService.setPackets(packets);
+            filterIPService.setPackets(packets);
         } catch (StorageFileNotFoundException e) {
             throw new PacketListIsEmptyException("Packet list is empty");
         }
 
-        List<? extends InternetProtocol> internetProtocols = (List<? extends InternetProtocol>) filterService.filterByDestination(destinationIp, String.format("IPv%s", version));
+        List<? extends InternetProtocol> internetProtocols = (List<? extends InternetProtocol>) filterIPService.filterByDestination(destinationIp, String.format("IPv%s", version));
 
         if (internetProtocols.isEmpty())
             throw new IPPacketsNotFoundException(String.format("IP packets with destination ip: %s not found", destinationIp));

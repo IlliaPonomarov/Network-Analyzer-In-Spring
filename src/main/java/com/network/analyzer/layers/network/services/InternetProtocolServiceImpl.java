@@ -7,15 +7,17 @@ import com.network.analyzer.layers.network.models.ARP;
 import com.network.analyzer.layers.network.models.ICMP;
 import com.network.analyzer.layers.network.models.InternetProtocolV4;
 import com.network.analyzer.layers.network.models.InternetProtocolV6;
+import com.network.analyzer.services.PacketService;
 import org.pcap4j.packet.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Service("internetProtocolService")
-public class InternetProtocolServiceImpl implements InternetProtocolService{
+@Service("internetProtocolServiceImpl")
+public class InternetProtocolServiceImpl implements InternetProtocolService, PacketService {
 
     private  List<Packet> packets = new ArrayList<>();
     private  List<InternetProtocolV4> internetProtocolV4List = new ArrayList<>();
@@ -24,8 +26,9 @@ public class InternetProtocolServiceImpl implements InternetProtocolService{
     private List<ARP> arpList = new ArrayList<>();
     private  List<InternetProtocolV6> internetProtocolV6List = new ArrayList<>();
 
+
     @Override
-    public boolean collectInternetProtocols() {
+    public boolean collectPackets() {
         internetProtocolV4List =  this.packets.stream().filter(packet -> packet.get(IpV4Packet.class) != null).map(IPv4Mapper::toIPv4).toList();
         icmpV4List = this.packets.stream().filter(packet -> packet.get(IcmpV4CommonPacket.class) != null).map(ICMPMapper::toICMPv4).toList();
         icmpV6List = this.packets.stream().filter(packet -> packet.get(IcmpV6CommonPacket.class) != null).map(ICMPMapper::toICMPv6).toList();
@@ -42,7 +45,7 @@ public class InternetProtocolServiceImpl implements InternetProtocolService{
     @Override
     public List<InternetProtocolV4> findInternetProtocolsByIPVersion(String version) {
             if (this.internetProtocolV4List.isEmpty())
-                this.collectInternetProtocols();
+                this.collectPackets();
 
         return internetProtocolV4List.stream().filter(internetProtocolV4 -> internetProtocolV4.getVersion().equals(version)).toList();
     }
@@ -61,7 +64,7 @@ public class InternetProtocolServiceImpl implements InternetProtocolService{
     @Override
     public List<ICMP> findICMPv4sByIPVersion(String format) {
         if (this.icmpV4List.isEmpty())
-            this.collectInternetProtocols();
+            this.collectPackets();
 
         return !icmpV4List.isEmpty() ? icmpV4List : Collections.emptyList();
     }
@@ -69,7 +72,7 @@ public class InternetProtocolServiceImpl implements InternetProtocolService{
     @Override
     public List<ICMP> findICMPv6sByIPVersion(String format) {
         if (this.icmpV6List.isEmpty())
-            this.collectInternetProtocols();
+            this.collectPackets();
 
         return !icmpV6List.isEmpty() ? icmpV6List : Collections.emptyList();
     }
@@ -77,7 +80,7 @@ public class InternetProtocolServiceImpl implements InternetProtocolService{
     @Override
     public List<ARP> findARPs() {
         if (this.arpList.isEmpty())
-            this.collectInternetProtocols();
+            this.collectPackets();
 
         return !arpList.isEmpty() ? arpList : Collections.emptyList();
     }
