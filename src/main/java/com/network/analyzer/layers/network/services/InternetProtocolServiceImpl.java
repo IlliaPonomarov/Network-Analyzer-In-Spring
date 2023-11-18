@@ -26,7 +26,7 @@ public class InternetProtocolServiceImpl implements InternetProtocolService{
 
     @Override
     public boolean collectInternetProtocols() {
-        internetProtocolV4List =  this.packets.stream().filter(packet -> packet.get(IpV4Packet.class) != null).map(IPv4Mapper::toInternetProtocol).toList();
+        internetProtocolV4List =  this.packets.stream().filter(packet -> packet.get(IpV4Packet.class) != null).map(IPv4Mapper::toIPv4).toList();
         icmpV4List = this.packets.stream().filter(packet -> packet.get(IcmpV4CommonPacket.class) != null).map(ICMPMapper::toICMPv4).toList();
         icmpV6List = this.packets.stream().filter(packet -> packet.get(IcmpV6CommonPacket.class) != null).map(ICMPMapper::toICMPv6).toList();
         arpList = this.packets.stream().filter(packet -> packet.get(ArpPacket.class) != null).map(ARPMapper::toARP).toList();

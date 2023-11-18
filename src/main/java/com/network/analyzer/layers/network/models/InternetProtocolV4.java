@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
-public class InternetProtocolV4 {
+public class InternetProtocolV4 extends InternetProtocol {
 
     private final UUID id;
     private String sourceIpAddress;
@@ -23,10 +23,11 @@ public class InternetProtocolV4 {
     private int protocolType;
     private byte[] payload;
 
-    public InternetProtocolV4(String sourceIP, String destinationIP, String version, int length, String protocol, int identification, int timeToLive, int headerChecksum, int totalLength, int fragmentOffset, int flags, int headerLength, int protocolType, byte[] payload) {
+    public InternetProtocolV4(String sourceIpAddress, String destinationIpAddress, int length, int timeToLive, int headerChecksum, int identification, String version, int totalLength, int fragmentOffset, int flags, int headerLength, int protocolType, byte[] payload) {
+        super(sourceIpAddress, destinationIpAddress, length, version);
         this.id = UUID.randomUUID();
-        this.sourceIpAddress = sourceIP;
-        this.destinationIpAddress = destinationIP;
+        this.sourceIpAddress = sourceIpAddress;
+        this.destinationIpAddress = destinationIpAddress;
         this.length = length;
         this.timeToLive = timeToLive;
         this.headerChecksum = headerChecksum;
