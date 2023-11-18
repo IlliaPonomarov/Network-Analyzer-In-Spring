@@ -183,7 +183,6 @@ public class InternetProtocolV4 {
                 "id=" + id +
                 ", sourceIpAddress='" + sourceIpAddress + '\'' +
                 ", destinationIpAddress='" + destinationIpAddress + '\'' +
-                ", TCP=" + TCP +
                 ", length=" + length +
                 ", timeToLive=" + timeToLive +
                 ", headerChecksum=" + headerChecksum +

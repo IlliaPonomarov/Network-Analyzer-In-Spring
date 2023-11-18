@@ -43,7 +43,6 @@ public class PcapFileUploader {
         return packets;
     }
 
-    @Deprecated
     public List<Packet> getPackets() {
         String path = String.format("%s/%s.pcap", requestPath, UUID.randomUUID().toString());
         try {
