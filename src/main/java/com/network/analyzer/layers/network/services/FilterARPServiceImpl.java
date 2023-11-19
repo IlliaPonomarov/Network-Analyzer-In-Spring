@@ -26,20 +26,30 @@ public class FilterARPServiceImpl implements FilterIPService, FilterMACService, 
     }
 
 
+
     @Override
-    public String filterBySourceMAC(String source) {
-        return null;
+    public List<ARP> filterBySourceAndDestinationMACs(String source, String destination) {
+        if (this.arps.isEmpty())
+            this.collectPackets();
+
+        return arps.stream().filter(arp -> arp.getSenderMacAddress().equals(source) && arp.getTargetMacAddress().equals(destination)).toList();
     }
 
     @Override
-    public String filterByDestinationMAC(String destination) {
-        return null;
+    public List<ARP> filterBySourceMacAddress(String mac) {
+        if (this.arps.isEmpty())
+            this.collectPackets();
+
+        return arps.stream().filter(arp -> arp.getSenderMacAddress().equals(mac) || arp.getTargetMacAddress().equals(mac)).toList();
     }
 
     @Override
-    public String filterBySourceAndDestinationMACs(String source, String destination) {
-        return null;
+    public List<ARP> filterByDestinationMacAddress(String lowerCase) {
+        if (this.arps.isEmpty())
+            this.collectPackets();
+        return arps.stream().filter(arp -> arp.getTargetMacAddress().equals(lowerCase)).toList();
     }
+
 
     @Override
     public List<?> filterBySource(String source, String version) {
@@ -54,7 +64,7 @@ public class FilterARPServiceImpl implements FilterIPService, FilterMACService, 
         if (this.arps.isEmpty())
             this.collectPackets();
 
-        return arps.stream().filter(arp -> arp.getTargetIPAddress().equals(destination)).toList();
+        return arps.stream().filter(arp -> arp.getTargetIPAddress().equals(destination) ).toList();
     }
 
     @Override
@@ -62,7 +72,7 @@ public class FilterARPServiceImpl implements FilterIPService, FilterMACService, 
         if (this.arps.isEmpty())
             this.collectPackets();
 
-        return arps.stream().filter(arp -> arp.getSenderIPAddress().equals(source) && arp.getTargetIPAddress().equals(destination)).toList();
+        return arps.stream().filter(arp -> (arp.getSenderIPAddress().equals(source) && arp.getTargetIPAddress().equals(destination))).toList();
     }
 
     @Override

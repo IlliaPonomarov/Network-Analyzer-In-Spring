@@ -14,8 +14,11 @@ public class ARPMapper {
         String opcode = arpPacket.getHeader().getOperation().name();
         String senderMacAddress = arpPacket.getHeader().getSrcHardwareAddr().toString();
         String senderIPAddress = arpPacket.getHeader().getSrcProtocolAddr().toString();
+        senderIPAddress = senderIPAddress.replace("/", "");
+
         String targetMacAddress = arpPacket.getHeader().getDstHardwareAddr().toString();
         String targetIPAddress = arpPacket.getHeader().getDstProtocolAddr().toString();
+        targetIPAddress = targetIPAddress.replace("/", "");
 
         return new ARP(hardwareType, protocolType, hardwareSize, protocolSize, opcode, senderMacAddress, senderIPAddress, targetMacAddress, targetIPAddress);
     }

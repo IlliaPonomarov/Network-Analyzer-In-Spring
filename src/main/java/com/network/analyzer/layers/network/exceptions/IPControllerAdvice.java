@@ -20,4 +20,15 @@ public class IPControllerAdvice {
     public ErrorResponse ICMPPacketsNotFoundExceptionHandler(ICMPPacketsNotFoundException exception) {
         return new ErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(value = HardwareTypeIsEmptyException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse HardwareTypeIsEmptyExceptionHandler(HardwareTypeIsEmptyException exception) {
+        return new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = OpcodeIsEmptyException.class)
+    public ErrorResponse OpcodeIsEmptyExceptionHandler(HardwareTypeIsEmptyException exception) {
+        return new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
