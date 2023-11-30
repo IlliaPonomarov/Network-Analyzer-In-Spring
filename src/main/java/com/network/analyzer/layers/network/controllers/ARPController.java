@@ -55,7 +55,7 @@ public class ARPController {
         List<ARP> arps = new ArrayList<>();
 
         this.setPackets(id);
-        arps = ipService.findARPs();
+        arps = arpServiceImpl.findARPs();
 
         if (arps.isEmpty())
             throw new ARPPacketsNotFoundException("ARP packets not found");
@@ -174,7 +174,6 @@ public class ARPController {
         return arps;
 
     }
-
 
     private void setPackets(String id) {
         try {

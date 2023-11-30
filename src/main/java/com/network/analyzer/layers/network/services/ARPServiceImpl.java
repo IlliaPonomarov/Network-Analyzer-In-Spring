@@ -18,12 +18,6 @@ public class ARPServiceImpl implements PacketService, FilterIPService, FilterMAC
     private List<Packet> packets = new ArrayList<>();
     private List<ARP> arps = new ArrayList<>();
 
-    public List<ARP> findAll() {
-        if (this.arps.isEmpty())
-            this.collectPackets();
-
-        return arps.isEmpty() ? Collections.emptyList() : arps;
-    }
 
     public List<ARP> findARPsByOpcode(String opcode) {
         if (this.arps.isEmpty())
@@ -84,5 +78,12 @@ public class ARPServiceImpl implements PacketService, FilterIPService, FilterMAC
         if (this.arps.isEmpty())
             this.collectPackets();
         return arps.stream().filter(arp -> arp.getHardwareType().toLowerCase().equals(hardware)).toList();
+    }
+
+    public List<ARP> findARPs() {
+        if (this.arps.isEmpty())
+            this.collectPackets();
+
+        return !arps.isEmpty() ? arps : Collections.emptyList();
     }
 }
