@@ -2,7 +2,7 @@ package com.network.analyzer.layers.physical.exceptions.advice;
 
 
 import com.network.analyzer.global.exceptions.ErrorResponse;
-import com.network.analyzer.layers.physical.exceptions.EthernetPacketsNotFoundException;
+import com.network.analyzer.layers.physical.exceptions.PacketsNotFoundException;
 import com.network.analyzer.layers.physical.exceptions.IncorrectMacAddressException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,9 +20,9 @@ public class EthernetControllerAdvice {
         return new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(EthernetPacketsNotFoundException.class)
+    @ExceptionHandler(PacketsNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleEthernetPacketsNotFoundException(EthernetPacketsNotFoundException exception) {
+    public ErrorResponse handleEthernetPacketsNotFoundException(PacketsNotFoundException exception) {
         return new ErrorResponse(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

@@ -12,10 +12,13 @@ import com.network.analyzer.storage.exceptions.PacketListIsEmptyException;
 import com.network.analyzer.storage.exceptions.StorageFileNotFoundException;
 import com.network.analyzer.storage.services.StorageService;
 import com.network.analyzer.utility.validators.ethernet.MacValidation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.pcap4j.packet.Packet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -49,10 +52,11 @@ public class ARPController {
         this.arpServiceImpl = arpServiceImpl;
     }
 
+
     @GetMapping("/")
     @ResponseStatus(HttpStatus.FOUND)
-    public List<ARP> findARPs(@PathVariable("id") String id) {
-        List<ARP> arps = new ArrayList<>();
+    public ResponseEntity<List<ARP>> findARPs(@PathVariable("id") String id) {
+        List<ARP> arps = new ArrayList<ARP>();
 
         this.setPackets(id);
         arps = arpServiceImpl.findARPs();
@@ -60,7 +64,7 @@ public class ARPController {
         if (arps.isEmpty())
             throw new ARPPacketsNotFoundException("ARP packets not found");
 
-        return arps;
+        return new ResponseEntity<>(arps, HttpStatus.FOUND);
     }
 
     @GetMapping("{opcode}/opcode")
