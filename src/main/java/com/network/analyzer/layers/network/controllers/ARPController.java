@@ -56,7 +56,7 @@ public class ARPController {
     @GetMapping("/")
     @ResponseStatus(HttpStatus.FOUND)
     public ResponseEntity<List<ARP>> findARPs(@PathVariable("id") String id) {
-        List<ARP> arps = new ArrayList<ARP>();
+        List<ARP> arps = new ArrayList<>();
 
         this.setPackets(id);
         arps = arpServiceImpl.findARPs();

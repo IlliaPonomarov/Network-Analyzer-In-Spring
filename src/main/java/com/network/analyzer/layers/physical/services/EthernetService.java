@@ -45,4 +45,8 @@ public class EthernetService {
         List<Ethernet> ethernetList = getEthernetList();
         return !ethernetList.isEmpty() ? ethernetList.stream().filter(ethernet -> ethernet.getEthernetHeader().getEthernetType().equals(ethernetType)).collect(Collectors.toList()): new ArrayList<>();
     }
+
+    public List<Packet> getPackets() {
+        return packets;
+    }
 }
