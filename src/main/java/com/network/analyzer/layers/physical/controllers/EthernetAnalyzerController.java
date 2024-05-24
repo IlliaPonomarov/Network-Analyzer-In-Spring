@@ -43,7 +43,7 @@ public class EthernetAnalyzerController {
     /***
      * This method is responsible for finding all the ethernet packets in the pcap file.
      * @param id String - the id of the pcap file.
-     * @return List<Ethernet> - the list of the ethernet packets.
+     * @return List Ethernet - the list of the ethernet packets.
      */
 
     @Operation(summary = "Find all ethernet packets in the pcap file")
@@ -63,24 +63,15 @@ public class EthernetAnalyzerController {
     })
     @GetMapping("/")
     public List<Ethernet> findAll(@PathVariable String id) throws StorageException {
-        String filename = String.format("%s", id);
-        List<Packet> packets = new ArrayList<>();
-
         var params = Collections.singletonMap("id", id);
 
         verifyParams(params);
 
-        try {
-            packets = storageService.loadPackets(filename);
+        List<Packet> packets = this.getPackets(id);
 
-            if (packets.isEmpty())
-                throw new PacketsNotFoundException("No packets found");
+        if (packets.isEmpty())
+            throw new PacketsNotFoundException("No packets found");
 
-            this.ethernetService.setPackets(packets);
-
-        } catch (StorageFileNotFoundException e) {
-            throw new StorageFileNotFoundException(e.getMessage());
-        }
         return this.ethernetService.getEthernetList();
     }
 
@@ -88,7 +79,7 @@ public class EthernetAnalyzerController {
      * This method is responsible for finding all the ethernet packets by the source mac address.
      * @param sourceMac String - the source mac address.
      * @param id String - the id of the pcap file.
-     * @return List<Ethernet> - the list of the ethernet packets.
+     * @return List Ethernet - the list of the ethernet packets.
      */
 
     @Operation(summary = "Find all ethernet packets by source mac address")
@@ -124,16 +115,10 @@ public class EthernetAnalyzerController {
 
         verifyParams(params);
 
-        try {
-            List<Packet> packets = this.storageService.loadPackets(id);
-            this.ethernetService.setPackets(packets);
+        List<Packet> packets = this.getPackets(id);
 
-            if (packets.isEmpty())
-                throw new StorageFileNotFoundException("No packets found");
-
-        } catch (StorageFileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        if (packets.isEmpty())
+            throw new PacketsNotFoundException("No packets found");
 
 
         List<Ethernet> ethernets = this.ethernetService.getEthernetList();
@@ -149,7 +134,7 @@ public class EthernetAnalyzerController {
      * This method is responsible for finding all the ethernet packets by the destination mac address.
      * @param destinationMac String - the destination mac address.
      * @param id String - the id of the pcap file.
-     * @return List<Ethernet> - the list of the ethernet packets.
+     * @return List Ethernet - the list of the ethernet packets.
      */
     @Operation(summary = "Find all ethernet packets by destination mac address")
     @ApiResponse(responseCode = "200", description = "List of ethernet packets",
@@ -175,16 +160,10 @@ public class EthernetAnalyzerController {
 
         verifyParams(params);
 
-        try {
-            List<Packet> packets = this.storageService.loadPackets(id);
-            this.ethernetService.setPackets(packets);
+        List<Packet> packets = this.getPackets(id);
 
-            if (packets.isEmpty())
-                throw new StorageFileNotFoundException("No packets found");
-
-        } catch (StorageFileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        if (packets.isEmpty())
+            throw new PacketsNotFoundException("No packets found");
 
         List<Ethernet> ethernets = this.ethernetService.getEthernetList();
 
@@ -199,7 +178,7 @@ public class EthernetAnalyzerController {
      * @param sourceMac String - the source mac address.
      * @param destinationMac String - the destination mac address.
      * @param id String - the id of the pcap file.
-     * @return List<Ethernet> - the list of the ethernet packets.
+     * @return List Ethernet - the list of the ethernet packets.
      */
     @Operation(summary = "Find all ethernet packets by source and destination mac address")
     @ApiResponse(responseCode = "200", description = "List of ethernet packets",
@@ -247,7 +226,8 @@ public class EthernetAnalyzerController {
      * This method is responsible for finding all the ethernet packets by the ethernet type.
      * @param ethernetType String - the ethernet type.
      * @param id String - the id of the pcap file.
-     * @return List<Ethernet> - the list of the ethernet packets.
+     * @see Ethernet
+     * @return List Ethernet - the list of the ethernet packets.
      */
 
     @Operation(summary = "Find all ethernet packets by ethernet type")
@@ -291,6 +271,11 @@ public class EthernetAnalyzerController {
         return this.ethernetService.filterByEthernetType(ethernetType);
     }
 
+    /**
+     * This method is responsible for verifying the provided parameters.
+     * @param params Map<String, String> - the map of the parameters.
+     *  @throws ParamWasNotFoundException - if the parameter was not found.
+     */
 
     private void verifyParams(Map<String, String> params) {
         for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -299,6 +284,11 @@ public class EthernetAnalyzerController {
         }
     }
 
+    /***
+     * This method is responsible for getting the packets from the pcap file.
+     * @param id String - the id of the pcap file.
+     * @return List<Packet> - the list of the packets.
+     */
 
     private List<Packet> getPackets(String id) {
         try {

@@ -25,7 +25,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /***
- * @Service annotation is used in your service layer and annotates classes that perform service tasks, often you don't use it but in many case you use it in your service classes.
+ * Service annotation is used in your service layer and annotates classes that perform service tasks, often you don't use it but in many case you use it in your service classes.
  * @see Service
  * This class is responsible for storing files in the file system
  * @see StorageService
@@ -92,7 +92,7 @@ public class FileSystemStorageService implements StorageService {
 
     /***
      * This method is responsible for loading all files from the file system
-     * @return Stream<Path> - stream of paths
+     * @return Stream Path - stream of paths
      * @throws StorageException - if failed to read stored files
      * @see StorageException
      */

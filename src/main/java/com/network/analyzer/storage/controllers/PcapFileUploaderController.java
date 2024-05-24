@@ -44,7 +44,7 @@ public class PcapFileUploaderController {
     /***
      * This method is responsible for uploading the pcap file.
      * @param pcap MultipartFile - the pcap file that is going to be uploaded.
-     * @return ResponseEntity<String> - the response entity that contains the message about the result of the operation.
+     * @return ResponseEntity- the response entity that contains the message about the result of the operation.
      */
     @PostMapping("/upload")
     @ResponseStatus(HttpStatus.OK)
