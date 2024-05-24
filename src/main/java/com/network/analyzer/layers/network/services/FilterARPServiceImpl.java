@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Service("filterARPServiceImpl")
 public class FilterARPServiceImpl implements FilterIPService, FilterMACService, PacketService {
@@ -56,7 +57,9 @@ public class FilterARPServiceImpl implements FilterIPService, FilterMACService, 
         if (this.arps.isEmpty())
             this.collectPackets();
 
-        return arps.stream().filter(arp -> arp.getSenderIPAddress().equals(source)).toList();
+        Predicate<ARP> filterBySourceIP = arp -> arp.getSenderIPAddress().equals(source);
+
+        return arps.stream().filter(filterBySourceIP).toList();
     }
 
     @Override
@@ -64,7 +67,9 @@ public class FilterARPServiceImpl implements FilterIPService, FilterMACService, 
         if (this.arps.isEmpty())
             this.collectPackets();
 
-        return arps.stream().filter(arp -> arp.getTargetIPAddress().equals(destination) ).toList();
+        Predicate<ARP> filterByDestinationIP = arp -> arp.getTargetIPAddress().equals(destination);
+
+        return arps.stream().filter(filterByDestinationIP).toList();
     }
 
     @Override
@@ -72,7 +77,9 @@ public class FilterARPServiceImpl implements FilterIPService, FilterMACService, 
         if (this.arps.isEmpty())
             this.collectPackets();
 
-        return arps.stream().filter(arp -> (arp.getSenderIPAddress().equals(source) && arp.getTargetIPAddress().equals(destination))).toList();
+        Predicate<ARP> filterBySourceAndDestinationIP = arp -> arp.getSenderIPAddress().equals(source) && arp.getTargetIPAddress().equals(destination);
+
+        return arps.stream().filter(filterBySourceAndDestinationIP).toList();
     }
 
     @Override

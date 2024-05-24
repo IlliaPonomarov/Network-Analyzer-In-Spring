@@ -1,10 +1,8 @@
 package com.network.analyzer.storage.services;
 
-import jakarta.servlet.http.HttpServlet;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.Pcaps;
 import org.pcap4j.packet.Packet;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -77,7 +75,7 @@ public class PcapFileUploader {
         return packets;
     }
 
-    public List<String> getListOfFiles() {
+    public List<String> getFiles() {
         File folder = new File(requestPath);
         File[] listOfFiles = folder.listFiles();
         List<String> files = new ArrayList<>();
