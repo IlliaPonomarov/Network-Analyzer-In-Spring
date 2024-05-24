@@ -25,7 +25,8 @@ dependencies {
 
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
+    testImplementation "org.mockito:mockito-core:3.+"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'}
 
 tasks.named('bootBuildImage') {
     builder = 'paketobuildpacks/builder-jammy-base:latest'

@@ -7,6 +7,7 @@ import org.pcap4j.packet.Packet;
 public class ARPMapper {
     public static ARP toARP(Packet packet) {
         ArpPacket arpPacket = packet.get(ArpPacket.class);
+
         String hardwareType = arpPacket.getHeader().getHardwareType().name();
         String protocolType = arpPacket.getHeader().getProtocolType().name();
         int hardwareSize = arpPacket.getHeader().getHardwareAddrLengthAsInt();
