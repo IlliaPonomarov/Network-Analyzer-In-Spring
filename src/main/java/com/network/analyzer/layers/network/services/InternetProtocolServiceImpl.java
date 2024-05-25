@@ -8,6 +8,9 @@ import com.network.analyzer.layers.network.models.ICMP;
 import com.network.analyzer.layers.network.models.InternetProtocolV4;
 import com.network.analyzer.layers.network.models.InternetProtocolV6;
 import com.network.analyzer.services.PacketService;
+import com.network.analyzer.utility.filters.network.ARPFilter;
+import com.network.analyzer.utility.filters.network.ICMPFilter;
+import com.network.analyzer.utility.filters.network.IPFilter;
 import org.pcap4j.packet.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,13 +29,24 @@ public class InternetProtocolServiceImpl implements InternetProtocolService, Pac
     private List<ARP> arpList = new ArrayList<>();
     private  List<InternetProtocolV6> internetProtocolV6List = new ArrayList<>();
 
+    @Autowired
+    public InternetProtocolServiceImpl(List<Packet> packets, List<InternetProtocolV4> internetProtocolV4List, List<ICMP> icmpV4List, List<ICMP> icmpV6List, List<ARP> arpList, List<InternetProtocolV6> internetProtocolV6List) {
+        this.packets = packets;
+        this.internetProtocolV4List = internetProtocolV4List;
+        this.icmpV4List = icmpV4List;
+        this.icmpV6List = icmpV6List;
+        this.arpList = arpList;
+        this.internetProtocolV6List = internetProtocolV6List;
+    }
+
 
     @Override
     public boolean collectPackets() {
-        internetProtocolV4List =  this.packets.stream().filter(packet -> packet.get(IpV4Packet.class) != null).map(IPv4Mapper::toIPv4).toList();
-        icmpV4List = this.packets.stream().filter(packet -> packet.get(IcmpV4CommonPacket.class) != null).map(ICMPMapper::toICMPv4).toList();
-        icmpV6List = this.packets.stream().filter(packet -> packet.get(IcmpV6CommonPacket.class) != null).map(ICMPMapper::toICMPv6).toList();
-        arpList = this.packets.stream().filter(packet -> packet.get(ArpPacket.class) != null).map(ARPMapper::toARP).toList();
+        internetProtocolV4List =  this.packets.stream().filter(IPFilter.getIPv4()).map(IPv4Mapper::toIPv4).toList();
+
+        icmpV4List = this.packets.stream().filter(ICMPFilter.getIcmpV4()).map(ICMPMapper::toICMPv4).toList();
+        icmpV6List = this.packets.stream().filter(ICMPFilter.getIcmpV6()).map(ICMPMapper::toICMPv6).toList();
+        arpList = this.packets.stream().filter(ARPFilter.getARP()).map(ARPMapper::toARP).toList();
 
         return !internetProtocolV4List.isEmpty() || !icmpV4List.isEmpty() || !internetProtocolV6List.isEmpty() || !icmpV6List.isEmpty();
     }

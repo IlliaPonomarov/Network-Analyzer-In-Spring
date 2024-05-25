@@ -12,6 +12,10 @@ public class InternetProtocolV6 extends InternetProtocol{
     private int nextHeader;
     private int hopLimit;
 
+    public InternetProtocolV6() {
+        this("", "", 0, "", 0, 0, 0, 0, 0);
+    }
+
     public InternetProtocolV6(String sourceIpAddress, String destinationIpAddress, int length, String version, int trafficClass, int flowLabel, int payloadLength, int nextHeader, int hopLimit) {
         super(sourceIpAddress, destinationIpAddress, length, version);
         this.id = UUID.randomUUID();

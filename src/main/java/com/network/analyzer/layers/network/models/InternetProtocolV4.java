@@ -23,6 +23,9 @@ public class InternetProtocolV4 extends InternetProtocol {
     private int protocolType;
     private byte[] payload;
 
+    public InternetProtocolV4() {
+        this("", "", 0, 0, 0, 0, "", 0, 0, 0, 0, 0, new byte[0]);
+    }
     public InternetProtocolV4(String sourceIpAddress, String destinationIpAddress, int length, int timeToLive, int headerChecksum, int identification, String version, int totalLength, int fragmentOffset, int flags, int headerLength, int protocolType, byte[] payload) {
         super(sourceIpAddress, destinationIpAddress, length, version);
         this.id = UUID.randomUUID();
