@@ -9,13 +9,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public interface StorageService {
 
     void init() throws StorageException;
 
-    void store(MultipartFile file) throws StorageException;
+    String store(MultipartFile file) throws StorageException;
 
     Stream<Path> loadAll() throws StorageException;
 

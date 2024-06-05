@@ -1,11 +1,9 @@
 FROM eclipse-temurin:17-jdk-alpine
-
-
+WORKDIR /ntparser
 RUN apk update
-ARG JAR_FILE
+COPY . .
 
-COPY ${JAR_FILE} app.jar
 EXPOSE 6565
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "build/libs/Network-Analyzer-Spring-Boot-0.0.1-SNAPSHOT.jar"]
 
 

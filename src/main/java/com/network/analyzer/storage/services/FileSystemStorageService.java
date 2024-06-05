@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import com.network.analyzer.config.StorageConfig;
+import com.network.analyzer.services.logger.LoggerService;
 import com.network.analyzer.storage.exceptions.StorageException;
 import com.network.analyzer.storage.exceptions.StorageFileNotFoundException;
 import org.pcap4j.core.PcapHandle;
@@ -51,8 +52,8 @@ public class FileSystemStorageService implements StorageService {
         if (properties.getLocation().trim().isEmpty()) {
             throw new StorageException("File upload location defined at StorageConfig is invalid.");
         }
-
         this.rootLocation = Paths.get(properties.getLocation());
+
     }
 
     /***
@@ -61,22 +62,34 @@ public class FileSystemStorageService implements StorageService {
      * @throws StorageException - if file is empty or failed to store file
      * @see StorageException
      * @see MultipartFile
+     * @return
      */
 
     @Override
-    public void store(MultipartFile file) throws StorageException {
+    public String store(MultipartFile file) throws StorageException {
+        var uuid = UUID.randomUUID();
+        var newFileName = "%s.pcap".formatted(uuid);
         try {
             if (file.isEmpty()) {
+                LoggerService.error("Failed to store empty file.");
                 throw new StorageException("Failed to store empty file.");
             }
-            Path destinationFilePath = this.rootLocation.resolve(Paths.get(UUID.randomUUID() + ".pcap"))
-                    .normalize().toAbsolutePath();
+            Path destinationFilePath = this.rootLocation
+                    .resolve(Paths.get(newFileName))
+                    .normalize()
+                    .toAbsolutePath();
 
             Path rootAbsolutePath = this.rootLocation.toAbsolutePath();
             Path destinationParentAbsolutePath = destinationFilePath.getParent();
 
+            LoggerService.info(
+                    String.format("Storing file %s to %s", file.getOriginalFilename(), destinationFilePath.toString())
+            );
+
             if (!destinationParentAbsolutePath.equals(rootAbsolutePath)) {
                 // This is a security check
+                LoggerService.error("Cannot store file outside current directory.");
+                LoggerService.error("Destination parent path: " + destinationParentAbsolutePath.toString());
                 throw new StorageException("Cannot store file outside current directory.");
             }
             try (InputStream inputStream = file.getInputStream()) {
@@ -84,10 +97,13 @@ public class FileSystemStorageService implements StorageService {
                         StandardCopyOption.REPLACE_EXISTING);
             }
         } catch (IOException e) {
+            LoggerService.error("Failed to store file.");
             throw new StorageException("Failed to store file.", e);
         } catch (NullPointerException ex) {
+            LoggerService.error("Failed to store file. File is null.");
             throw new StorageException("Failed to store file. File is null.");
         }
+        return newFileName;
     }
 
     /***
@@ -100,6 +116,9 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public Stream<Path> loadAll() throws StorageException {
         try {
+            LoggerService.info("Loading all files from the file system.");
+            LoggerService.info("Root location: " + this.rootLocation.toString());
+            LoggerService.info("Root location absolute path: " + this.rootLocation.toAbsolutePath().toString());
             return Files.walk(this.rootLocation, 1)
                     .filter(path -> !path.equals(this.rootLocation))
                     .map(this.rootLocation::relativize);
@@ -111,6 +130,7 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public Path load(String filename) {
+        LoggerService.info("Loading file: " + filename);
         return rootLocation.resolve(filename);
     }
 
@@ -118,16 +138,28 @@ public class FileSystemStorageService implements StorageService {
     public Resource loadAsResource(String filename) throws StorageFileNotFoundException {
         try {
             Path file = load(filename);
+
+            LoggerService.info("Loading file as resource: " + filename);
             Resource resource = new UrlResource(file.toUri());
+
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
                 throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);
+                        String.format(
+                                "Could not read file: %s",
+                                filename
+                        )
+                );
 
             }
         } catch (MalformedURLException | StorageFileNotFoundException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+            throw new StorageFileNotFoundException(
+                    String.format(
+                            "Could not read file: %s",
+                            filename
+                    ),  e
+            );
         }
     }
 
@@ -137,7 +169,7 @@ public class FileSystemStorageService implements StorageService {
         try {
             Path file = load(filename +".pcap");
             Resource resource = new UrlResource(file.toUri());
-
+            LoggerService.info("Loading packets from file: " + filename);
 
             if (!resource.exists() || !resource.isReadable())
                 throw new StorageFileNotFoundException(
@@ -156,7 +188,13 @@ public class FileSystemStorageService implements StorageService {
                 e.printStackTrace();
             }
         } catch (MalformedURLException | StorageFileNotFoundException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+            LoggerService.error("Could not read file: " + filename);
+            throw new StorageFileNotFoundException(
+                    String.format(
+                            "Could not read file: %s",
+                            filename
+                    ),  e
+            );
         }
 
         return packets;
@@ -175,7 +213,9 @@ public class FileSystemStorageService implements StorageService {
             Files.createDirectories(rootLocation);
         }
         catch (IOException e) {
-            throw new StorageException("Could not initialize storage", e);
+            throw new StorageException(
+            String.format("Could not initialize storage location: %s",
+                    rootLocation.toString()), e);
         }
     }
 

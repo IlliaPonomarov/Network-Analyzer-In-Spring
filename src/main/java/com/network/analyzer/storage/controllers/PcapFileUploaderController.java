@@ -1,5 +1,6 @@
 package com.network.analyzer.storage.controllers;
 
+import com.network.analyzer.services.logger.LoggerService;
 import com.network.analyzer.storage.exceptions.StorageException;
 import com.network.analyzer.storage.services.PcapFileUploader;
 import com.network.analyzer.storage.services.StorageService;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
@@ -49,19 +51,26 @@ public class PcapFileUploaderController {
     @PostMapping("/upload")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<String> uploadPcapFile(@RequestPart("pcap") MultipartFile pcap) {
-        var success = new ResponseEntity<String>("File uploaded successfully", HttpStatus.OK);
+        var hashFileName = "";
 
+        LoggerService.info("Uploading pcap file");
         try {
-            this.storageService.store(pcap);
+            hashFileName = this.storageService.store(pcap);
+            LoggerService.info(String.format("File %s uploaded successfully", pcap.getOriginalFilename()));
+
             Stream<Path> pathStream = this.storageService.loadAll();
-            pathStream.forEach(System.out::println);
+            LoggerService.info("Files in the storage:");
+            LoggerService.info("====================================");
+            pathStream.forEach(path -> LoggerService.info(path.getFileName().toString()));
+            LoggerService.info("====================================");
         } catch (StorageException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         if (pcap == null)
             return new ResponseEntity<>("File is empty", HttpStatus.BAD_REQUEST);
 
-        return success;
+        return new ResponseEntity<String>(
+                String.format("File %s uploaded successfully", hashFileName), HttpStatus.OK);
     }
 
 
