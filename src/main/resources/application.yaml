@@ -1,23 +1,23 @@
 
 # Server configuration
 server:
-  port: 8765
+  port: ${SERVER_PORT:8080}
 
 # File upload properties and database configuration
 spring:
   servlet:
     multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: ${MAX_FILE_SIZE:10MB}
+      max-request-size: ${MAX_REQUEST_SIZE:10MB}
   jpa:
-    database: postgresql
+    database: POSTGRESQL
     show-sql: true
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:5432/network-parser
-    username: root
-    password: root
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/minioNetworkParser}
+    username: ${POSTGRES_USER:root}
+    password: ${POSTGRES_PASSWORD:root}
     driver-class-name: org.postgresql.Driver
 
 # Swagger configuration

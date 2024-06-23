@@ -26,7 +26,7 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /***
- * Service annotation is used in your service layer and annotates classes that perform service tasks, often you don't use it but in many case you use it in your service classes.
+ * Service annotation is used in your service bucketName and annotates classes that perform service tasks, often you don't use it but in many case you use it in your service classes.
  * @see Service
  * This class is responsible for storing files in the file system
  * @see StorageService

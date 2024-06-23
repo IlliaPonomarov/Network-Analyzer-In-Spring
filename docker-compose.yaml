@@ -8,12 +8,12 @@ services:
   postgres:
     image: postgres:14-alpine
     volumes:
-      - ~/apps/postgres:/var/lib/postgresql/data
+      - ~/apps/minio_net:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: network-parser
+      POSTGRES_DB: minioNetworkParser
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-      DATASOURCE_URL: jdbc:postgresql://postgres:5432/network-parser
+      DATASOURCE_URL: jdbc:postgresql://postgres:5432/minioNetworkParser
     ports:
       - "5432:5432"
 
