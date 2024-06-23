@@ -1,7 +1,7 @@
 
 # Server configuration
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT:6565}
 
 # File upload properties and database configuration
 spring:
@@ -31,9 +31,9 @@ springdoc:
 # Minio configuration
 minio:
   url: ${MINIO_URL:http://localhost:9000}
-  access-key: ${MINIO_ACCESS_KEY:OtwRLldr3MVNdgPnNTRq}
-  secret-key: ${MINIO_SECRET_KEY:SDVwPNDnPPfPnZLvBXkF8Uw0Xa8QicgwZUXMzGZ7}
-  backet-name: ${MINIO_BACKET_NAME:name}
+  access-key: ${MINIO_ACCESS_KEY:izXnkWHLzHhokgRSEs7X}
+  secret-key: ${MINIO_SECRET_KEY:LuhelCRDncTaa0u22LiF3GYbyKmagwr0KyAmCUx2}
+  backet-name: ${MINIO_BACKET_NAME:temp}
   #  expiration-time: 2 days in milliseconds for the pre-signed URLs
   expirationTime: ${MINIO_EXPIRATION_TIME:600000}
 

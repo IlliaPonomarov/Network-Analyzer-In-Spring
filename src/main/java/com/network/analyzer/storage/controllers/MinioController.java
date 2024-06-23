@@ -23,9 +23,10 @@ public class MinioController {
         this.minioURLService = minioURLService;
     }
 
-    @GetMapping("/initiate/upload/{fileName}/layer/{layer}")
+    @GetMapping("/initiate/upload/{fileName}/bucket/{bucket}")
     public ResponseEntity<MinoUploadResponse> initiateUpload(@PathVariable("fileName") String fileName,
-                                                             @PathVariable("layer") String layer) {
+                                                             @PathVariable("bucket") String layer) {
+
         return ResponseEntity.ok(minioURLService.initiateUpload(fileName, layer));
     }
 }
