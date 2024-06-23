@@ -1,5 +1,6 @@
-package com.network.analyzer.storage.services;
+package com.network.analyzer.storage.services.impl;
 
+import com.network.analyzer.storage.services.MinioBucketInfoService;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;

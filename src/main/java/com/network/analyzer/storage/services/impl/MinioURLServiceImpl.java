@@ -1,7 +1,7 @@
 package com.network.analyzer.storage.services.impl;
 
-import com.network.analyzer.storage.dto.Metadata;
-import com.network.analyzer.storage.dto.MinoUploadResponse;
+import com.network.analyzer.storage.dtos.Metadata;
+import com.network.analyzer.storage.dtos.MinoUploadResponse;
 import com.network.analyzer.storage.exceptions.MinioInitiateUploadException;
 import com.network.analyzer.storage.models.BucketInfo;
 import com.network.analyzer.storage.services.MinioDBService;

@@ -3,6 +3,7 @@ package com.network.analyzer.storage.services;
 
 import com.network.analyzer.config.StorageConfig;
 import com.network.analyzer.storage.exceptions.StorageException;
+import com.network.analyzer.storage.services.impl.FileSystemStorageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

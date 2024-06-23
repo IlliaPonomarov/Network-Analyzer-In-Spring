@@ -1,4 +1,4 @@
-package com.network.analyzer.storage.services;
+package com.network.analyzer.storage.services.impl;
 
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.Pcaps;

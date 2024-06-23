@@ -1,6 +1,6 @@
 package com.network.analyzer.storage.controllers;
 
-import com.network.analyzer.storage.dto.MinoUploadResponse;
+import com.network.analyzer.storage.dtos.MinoUploadResponse;
 import com.network.analyzer.storage.services.MinioURLService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

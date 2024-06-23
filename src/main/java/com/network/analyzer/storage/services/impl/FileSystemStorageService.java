@@ -1,4 +1,4 @@
-package com.network.analyzer.storage.services;
+package com.network.analyzer.storage.services.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -15,6 +15,7 @@ import com.network.analyzer.config.StorageConfig;
 import com.network.analyzer.services.logger.LoggerService;
 import com.network.analyzer.storage.exceptions.StorageException;
 import com.network.analyzer.storage.exceptions.StorageFileNotFoundException;
+import com.network.analyzer.storage.services.StorageService;
 import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.Pcaps;
 import org.pcap4j.packet.Packet;

@@ -1,4 +1,4 @@
-package com.network.analyzer.storage.dto;
+package com.network.analyzer.storage.dtos;
 
 import java.util.Date;
 import java.util.UUID;
